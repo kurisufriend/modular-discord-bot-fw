@@ -3,13 +3,14 @@ from random import randint
 import disc_api
 from grim_logger import glog, glog_level
 class client():
-    def __init__(self, token):
+    def __init__(self, config_path = "config.json"):
         self.logger = glog(level = glog_level.TRACE)
         self.ws = None
         self.last_sequence = None
         self.session_id = None
-        self.token = token
         self.user = None
+        with open(config_path, "r") as conf_fd:
+            self.config = json.loads(conf_fd.read())
     async def shit(self):
         # https://discord.com/developers/docs/topics/gateway#connecting-to-the-gateway
         # you're supposed to ask an HTTP endpoint what the ws gateway is but the docs didnt tell me the domain after 1sec so HAHA NOPE
@@ -33,13 +34,13 @@ class client():
             asyncio.get_event_loop().create_task(self.heartbeat(interval))
             await asyncio.sleep(1)
             # https://discord.com/developers/docs/topics/gateway#identify-example-identify
-            await self.ws.send(json.dumps({"op":2, "d":{"token":self.token, "intents": 513, "properties":{"$os":"linux", "browser":"mdbf", "device":"mdbf"}}}))
+            await self.ws.send(json.dumps({"op":2, "d":{"token":self.config["token"], "intents": 513, "properties":{"$os":"linux", "browser":"mdbf", "device":"mdbf"}}}))
         else:
             # https://discord.com/developers/docs/topics/gateway#identify-example-identify
-            await self.ws.send(json.dumps({"op":6, "d":{"token":self.token, "session_id":self.session_id, "seq":self.last_sequence}}))
+            await self.ws.send(json.dumps({"op":6, "d":{"token":self.config["token"], "session_id":self.session_id, "seq":self.last_sequence}}))
     async def op_invalid_session(self, res):
         await asyncio.sleep(randint(1, 5)) # try again
-        await self.ws.send(json.dumps({"op":2, "d":{"token":self.token, "intents": 513, "properties":{"$os":"linux", "browser":"mdbf", "device":"mdbf"}}}))
+        await self.ws.send(json.dumps({"op":2, "d":{"token":self.config["token"], "intents": 513, "properties":{"$os":"linux", "browser":"mdbf", "device":"mdbf"}}}))
     async def op_dispatch(self, res):
         if res["t"] == "READY":
             self.session_id = res["d"]["session_id"]
