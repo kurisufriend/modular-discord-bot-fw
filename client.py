@@ -1,7 +1,9 @@
-import websockets, asyncio, json
+import websockets, asyncio, json, sys, requests
 from random import randint
 import disc_api
 from grim_logger import glog, glog_level
+from plugin_manager import plugin_manager
+
 class client():
     def __init__(self, config_path = "config.json"):
         self.logger = glog(level = glog_level.TRACE)
@@ -11,6 +13,7 @@ class client():
         self.user = None
         with open(config_path, "r") as conf_fd:
             self.config = json.loads(conf_fd.read())
+        self.plugman = plugin_manager(self.logger, plugin_path = self.config["plugin_path"])
     async def shit(self):
         # https://discord.com/developers/docs/topics/gateway#connecting-to-the-gateway
         # you're supposed to ask an HTTP endpoint what the ws gateway is but the docs didnt tell me the domain after 1sec so HAHA NOPE
@@ -45,5 +48,12 @@ class client():
         if res["t"] == "READY":
             self.session_id = res["d"]["session_id"]
             self.user = res["d"]["user"]
+        self.plugman.handle(res["t"], res["d"], self)
     def run(self):
         asyncio.run(self.shit())
+    def send_msg(self, id, message):
+        endpoint = f"https://discordapp.com/api/channels/{id}/messages"
+        # fstring wasn't working for the auth
+        headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
+        res = requests.post(endpoint, headers = headers, data = json.dumps({"content": message}))
+        self.logger.write(headers)
