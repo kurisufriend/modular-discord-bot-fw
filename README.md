@@ -12,6 +12,8 @@ todo before it's basically finished:
 * basic rate limiting
 * ~~plugin manager & hook integration~~
 * make sure broken sockets are properly addressed with a resume or reconnect
-* default plugins so the bot does _something_ out of the box
-    * plugin reloading, user (command) authentication, etc. will also probably be written in plugin form
+* ~~default plugins so the bot does _something_ out of the box~~
+    * ~~plugin reloading, user (command) authentication, etc. will also probably be written in plugin form~~
 * initial presence in config
+* take config as cli param
+* save session config to file
