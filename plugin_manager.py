@@ -29,3 +29,7 @@ class plugin_manager():
                     getattr(plugin, "run")(event, ctx, bot)
                 except Exception as e:
                     bot.logger.write(e)
+    def __del__(self):
+        for plugin in self.plugins_loaded:
+            if hasattr(plugin, "clean"):
+                getattr(plugin, "clean")()

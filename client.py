@@ -11,6 +11,7 @@ class client():
         self.last_sequence = None
         self.session_id = None
         self.user = None
+        self.logger.write(f"loading config from {config_path}")
         with open(config_path, "r") as conf_fd:
             self.config = json.loads(conf_fd.read())
         self.plugman = plugin_manager(self.logger, plugin_path = self.config["plugin_path"])
