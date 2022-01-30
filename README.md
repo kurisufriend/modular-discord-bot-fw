@@ -15,7 +15,7 @@ framework for discord bots that uses contained files for individual feature plug
 * make sure broken sockets are properly addressed with a resume or reconnect
 * initial presence in config
 * full REST api implementation
-* plugins need to be asynchronously run (or something)
+
 
 ### plugins:
 * save session config to file
@@ -26,3 +26,4 @@ framework for discord bots that uses contained files for individual feature plug
 * ~~default plugins so the bot does _something_ out of the box~~
     * ~~plugin reloading, user (command) authentication, etc. will also probably be written in plugin form~~
 * ~~take config as cli param~~
+* ~~plugins need to be asynchronously run (or something)~~

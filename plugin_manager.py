@@ -1,6 +1,6 @@
 import os
 import sys
-
+import threading
 class plugin_manager():
     def __init__(self, logger, plugin_path = "./plugins"):
         self.logger = logger
@@ -26,7 +26,7 @@ class plugin_manager():
         for plugin in self.plugins_loaded:
             if event in plugin.hooks:
                 try:
-                    getattr(plugin, "run")(event, ctx, bot)
+                    threading.Thread(target=getattr(plugin, "run"), args=(event, ctx, bot), daemon=True).start()
                 except Exception as e:
                     bot.logger.write(e)
     def __del__(self):
