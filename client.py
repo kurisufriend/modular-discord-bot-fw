@@ -5,12 +5,14 @@ from grim_logger import glog, glog_level
 from plugin_manager import plugin_manager
 
 class client():
-    def __init__(self, config_path = "config.json"):
+    def __init__(self, config_path = None):
         self.logger = glog(level = glog_level.TRACE)
         self.ws = None
         self.last_sequence = None
         self.session_id = None
         self.user = None
+        if not config_path: # this really really really simplifies things even if it is technically messier than a default param itself
+            config_path = "config.json"
         self.logger.write(f"loading config from {config_path}")
         with open(config_path, "r") as conf_fd:
             self.config = json.loads(conf_fd.read())
@@ -58,3 +60,7 @@ class client():
         headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
         res = requests.post(endpoint, headers = headers, data = json.dumps({"content": message}))
         self.logger.write(headers)
+    def __enter__(self):
+        return self
+    def __exit__(self, type, value, traceback):
+        pass # this should destruct all members probably maybe
