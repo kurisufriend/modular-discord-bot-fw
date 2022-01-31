@@ -15,7 +15,7 @@ framework for discord bots that uses contained files for individual feature plug
 * make sure broken sockets are properly addressed with a resume or reconnect
 * initial presence in config
 * full REST api implementation
-* relative/nonreal ecscapt values for the config's `plugin.py`
+* relative/nonreal escape values for the config's `plugin.py`
 
 
 ### plugins:
