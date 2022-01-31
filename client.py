@@ -54,12 +54,18 @@ class client():
         self.plugman.handle(res["t"], res["d"], self)
     def run(self):
         asyncio.run(self.shit())
+    def get_channel(self, id):
+        endpoint = f"https://discordapp.com/api/channels/{id}"
+        headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
+        return requests.get(endpoint, headers = headers).text
+    def execute_webhook(self, link, message, name = "webhook"):
+        headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
+        requests.post(link, headers = headers, data = json.dumps({"content": message, "username": name}))
     def send_msg(self, id, message):
         endpoint = f"https://discordapp.com/api/channels/{id}/messages"
         # fstring wasn't working for the auth
         headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
         res = requests.post(endpoint, headers = headers, data = json.dumps({"content": message}))
-        self.logger.write(headers)
     def __enter__(self):
         return self
     def __exit__(self, type, value, traceback):
