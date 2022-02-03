@@ -56,7 +56,11 @@ class client():
         while True:
             try:
                 asyncio.run(self.shit())
+            except websockets.exceptions.ConnectionClosed:
+                pass
             except websockets.exceptions.ConnectionClosedError:
+                pass
+            except websockets.exceptions.ConnectionClosedOK:
                 pass
 
     def get_channel(self, id):
