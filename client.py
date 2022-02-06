@@ -53,7 +53,16 @@ class client():
             self.user = res["d"]["user"]
         self.plugman.handle(res["t"], res["d"], self)
     def run(self):
-        asyncio.run(self.shit())
+        while True:
+            try:
+                asyncio.run(self.shit())
+            except websockets.exceptions.ConnectionClosed:
+                pass
+            except websockets.exceptions.ConnectionClosedError:
+                pass
+            except websockets.exceptions.ConnectionClosedOK:
+                pass
+
     def get_channel(self, id):
         endpoint = f"https://discordapp.com/api/channels/{id}"
         headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
