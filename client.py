@@ -68,7 +68,9 @@ class client():
         headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
         return requests.get(endpoint, headers = headers).text
     def execute_webhook(self, link, message, name = "webhook"):
-        requests.post(link, data = json.dumps({"content": message, "username": name}))
+        #it doesn't work without the headers for some reason
+        headers = {"Content-Type": "application/json"}
+        requests.post(link, headers = headers, data = json.dumps({"content": message, "username": name}))
     def send_msg(self, id, message):
         endpoint = f"https://discordapp.com/api/channels/{id}/messages"
         # fstring wasn't working for the auth
