@@ -17,6 +17,7 @@ class client():
         with open(config_path, "r") as conf_fd:
             self.config = json.loads(conf_fd.read())
         self.plugman = plugin_manager(self.logger, plugin_path = self.config["plugin_path"])
+        self.api = disc_api.rest("https://discordapp.com/api", {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"})
     async def shit(self):
         # https://discord.com/developers/docs/topics/gateway#connecting-to-the-gateway
         # you're supposed to ask an HTTP endpoint what the ws gateway is but the docs didnt tell me the domain after 1sec so HAHA NOPE
@@ -63,19 +64,6 @@ class client():
             except websockets.exceptions.ConnectionClosedOK:
                 pass
 
-    def get_channel(self, id):
-        endpoint = f"https://discordapp.com/api/channels/{id}"
-        headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
-        return requests.get(endpoint, headers = headers).text
-    def execute_webhook(self, link, message, name = "webhook"):
-        #it doesn't work without the headers for some reason
-        headers = {"Content-Type": "application/json"}
-        requests.post(link, headers = headers, data = json.dumps({"content": message, "username": name}))
-    def send_msg(self, id, message):
-        endpoint = f"https://discordapp.com/api/channels/{id}/messages"
-        # fstring wasn't working for the auth
-        headers = {"Authorization": "Bot {0}".format(self.config["token"]), "User-Agent": "mbdf (cynic.moe, v1)", "Content-Type": "application/json"}
-        res = requests.post(endpoint, headers = headers, data = json.dumps({"content": message}))
     def __enter__(self):
         return self
     def __exit__(self, type, value, traceback):

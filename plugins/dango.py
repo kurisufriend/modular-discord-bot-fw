@@ -14,4 +14,4 @@ this particular example listens for a message that contains the string 'dango' a
 hooks = ["MESSAGE_CREATE"] # run() will be called when client.dispatch() gets a MESSAGE_CREATE
 def run(event, ctx, bot):
         if ctx["content"] == "dango": # if the message body matches...
-            bot.send_msg(ctx["channel_id"], "to all the motherfuckers that shed a tear")
+            bot.api.send_msg(ctx["channel_id"], "to all the motherfuckers that shed a tear")

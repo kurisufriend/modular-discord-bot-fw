@@ -1,3 +1,5 @@
+import requests, json
+
 gateway_opcodes = { # https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes
     0: "dispatch",
     1: "heartbeat",
@@ -27,3 +29,23 @@ gateway_close_event_codes = { # https://discord.com/developers/docs/topics/opcod
     4013: "You sent an invalid intent for a Gateway Intent. You may have incorrectly calculated the bitwise value.",
     4014: "You sent a disallowed intent for a Gateway Intent. You may have tried to specify an intent that you have not enabled or are not approved for."
 }
+
+class rest():
+    def __init__(self, gatewa, header):
+        self.gateway = gatewa
+        self.headers = header
+    def get(self, endpoint):
+        return requests.get(self.gateway+endpoint, headers = self.headers).text
+    def post(self, endpoint, dat):
+        requests.post(self.gateway+endpoint, headers = self.headers, data = dat)
+
+
+    def get_channel(self, id):
+        return self.get(f"/channels/{id}")
+    def get_guild_channels(self, id):
+        return self.get(f"/guilds/{id}/channels")
+    
+    def execute_webhook(self, link, message, name):
+        self.post(link, json.dumps({"content": message, "username": name}))
+    def send_msg(self, id, message):
+        self.post(f"/channels/{id}/messages", json.dumps({"content": message}))
