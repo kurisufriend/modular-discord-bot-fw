@@ -14,8 +14,7 @@ framework for discord bots that uses contained files for individual feature plug
 * basic rate limiting
 * initial presence in config
 * full REST api implementation
-* relative/nonreal escape values for the config's `plugin_path_`
-* split the REST API stuff up so they're not in `client`
+* relative/nonreal escape values for the config's `plugin_path`
 
 ### plugins:
 * save session config to file
@@ -28,3 +27,4 @@ framework for discord bots that uses contained files for individual feature plug
 * ~~take config as cli param~~
 * ~~plugins need to be asynchronously run (or something)~~
 * ~~make sure broken sockets are properly addressed with a resume or reconnect~~
+* ~~split the REST API stuff up so they're not in `client`~~
